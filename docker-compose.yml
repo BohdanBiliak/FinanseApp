@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - PORT=${PORT}
+      - JWT_SECRET=${JWT_SECRET}
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "4173:4173"
+    restart: unless-stopped

@@ -11,6 +11,7 @@ import transactionRoutes from "./routes/transaction.js";
 import KPI from "./models/KPI.js";
 import Product from "./models/Product.js";
 import Transaction from "./models/Transaction.js";
+import authRoutes from "./routes/auth.route.js"
 import { kpis, products, transactions } from "./data/data.js";
 
 dotenv.config();
@@ -21,13 +22,15 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
-
+app.use(cors({
+  origin: "http://localhost:4173", 
+  credentials: true
+}));
 /* ROUTES */
 app.use("/kpi", kpiRoutes);
 app.use("/product", productRoutes);
 app.use("/transaction", transactionRoutes);
-
+app.use("/auth", authRoutes)
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
 mongoose
@@ -36,6 +39,8 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(async () => {
+
+console.log("Sample data inserted");
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
   })
   .catch((error) => console.log(`${error} did not connect`));
